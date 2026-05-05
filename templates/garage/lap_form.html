@@ -1,0 +1,24 @@
+cat > templates/garage/lap_form.html << 'EOF'
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Add Lap Time{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-6">
+    <div class="card shadow">
+      <div class="card-body p-4">
+        <h3>Add Lap Time for {{ car }}</h3>
+        <form method="post">
+          {% csrf_token %}
+          {{ form|crispy }}
+          <button type="submit" class="btn btn-success w-100 mt-2">Save Lap Time</button>
+          <a href="{% url 'car_detail' car.pk %}" class="btn btn-secondary w-100 mt-2">Cancel</a>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+EOF

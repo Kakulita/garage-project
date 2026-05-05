@@ -1,0 +1,23 @@
+cat > templates/garage/car_confirm_delete.html << 'EOF'
+{% extends 'base.html' %}
+
+{% block title %}Delete Car{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center mt-5">
+  <div class="col-md-5">
+    <div class="card shadow border-danger">
+      <div class="card-body p-4 text-center">
+        <h3>⚠️ Delete Car</h3>
+        <p>Are you sure you want to delete <strong>{{ car }}</strong>?</p>
+        <form method="post">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-danger me-2">Yes, Delete</button>
+          <a href="{% url 'car_detail' car.pk %}" class="btn btn-secondary">Cancel</a>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+EOF

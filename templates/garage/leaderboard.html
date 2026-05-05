@@ -1,0 +1,45 @@
+cat > templates/garage/leaderboard.html << 'EOF'
+{% extends 'base.html' %}
+
+{% block title %}Leaderboard{% endblock %}
+
+{% block content %}
+<h2>🏆 Leaderboard</h2>
+
+<form method="get" class="row g-2 mb-4">
+  <div class="col-md-4">
+    <select name="track" class="form-select">
+      <option value="">All Tracks</option>
+      {% for track in tracks %}
+        <option value="{{ track.id }}" {% if selected_track == track.id|stringformat:"s" %}selected{% endif %}>
+          {{ track.name }}
+        </option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="col-md-2">
+    <button type="submit" class="btn btn-secondary">Filter</button>
+  </div>
+</form>
+
+<table class="table table-striped">
+  <thead>
+    <tr><th>#</th><th>Car</th><th>Driver</th><th>Track</th><th>Time</th><th>Date</th></tr>
+  </thead>
+  <tbody>
+    {% for lap in laps %}
+    <tr>
+      <td>{{ forloop.counter }}</td>
+      <td>{{ lap.car }}</td>
+      <td>{{ lap.car.owner.username }}</td>
+      <td>{{ lap.track.name }}</td>
+      <td>{{ lap.minutes }}:{{ lap.seconds|stringformat:"02d" }}.{{ lap.milliseconds|stringformat:"03d" }}</td>
+      <td>{{ lap.date }}</td>
+    </tr>
+    {% empty %}
+    <tr><td colspan="6" class="text-muted">No lap times yet.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}
+EOF

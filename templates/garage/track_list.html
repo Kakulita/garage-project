@@ -1,0 +1,31 @@
+cat > templates/garage/track_list.html << 'EOF'
+{% extends 'base.html' %}
+
+{% block title %}Tracks{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+  <div class="col"><h2>🏁 Tracks</h2></div>
+  <div class="col text-end">
+    <a href="{% url 'track_create' %}" class="btn btn-primary">+ Add Track</a>
+  </div>
+</div>
+
+<table class="table table-striped">
+  <thead>
+    <tr><th>Name</th><th>Location</th><th>Length (km)</th></tr>
+  </thead>
+  <tbody>
+    {% for track in tracks %}
+    <tr>
+      <td>{{ track.name }}</td>
+      <td>{{ track.location }}</td>
+      <td>{{ track.length_km }}</td>
+    </tr>
+    {% empty %}
+    <tr><td colspan="3" class="text-muted">No tracks yet.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}
+EOF

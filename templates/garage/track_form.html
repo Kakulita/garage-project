@@ -1,0 +1,24 @@
+cat > templates/garage/track_form.html << 'EOF'
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Add Track{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-6">
+    <div class="card shadow">
+      <div class="card-body p-4">
+        <h3>Add Track</h3>
+        <form method="post">
+          {% csrf_token %}
+          {{ form|crispy }}
+          <button type="submit" class="btn btn-primary w-100 mt-2">Save</button>
+          <a href="{% url 'track_list' %}" class="btn btn-secondary w-100 mt-2">Cancel</a>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+EOF

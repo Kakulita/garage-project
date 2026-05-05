@@ -1,0 +1,53 @@
+cat > templates/garage/home.html << 'EOF'
+{% extends 'base.html' %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+  <div class="col">
+    <h2>🏎️ My Garage</h2>
+  </div>
+  <div class="col text-end">
+    <a href="{% url 'car_create' %}" class="btn btn-primary">+ Add Car</a>
+  </div>
+</div>
+
+<div class="row mb-4">
+  <div class="col-md-4">
+    <div class="card text-white bg-primary shadow">
+      <div class="card-body">
+        <h5 class="card-title">Total Cars</h5>
+        <h2>{{ car_count }}</h2>
+      </div>
+    </div>
+  </div>
+</div>
+
+<h4>Recent Lap Times</h4>
+{% if recent_laps %}
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Car</th>
+      <th>Track</th>
+      <th>Time</th>
+      <th>Date</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for lap in recent_laps %}
+    <tr>
+      <td><a href="{% url 'car_detail' lap.car.pk %}">{{ lap.car }}</a></td>
+      <td>{{ lap.track.name }}</td>
+      <td>{{ lap.minutes }}:{{ lap.seconds|stringformat:"02d" }}.{{ lap.milliseconds|stringformat:"03d" }}</td>
+      <td>{{ lap.date }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p class="text-muted">No lap times yet. <a href="{% url 'car_create' %}">Add a car first!</a></p>
+{% endif %}
+{% endblock %}
+EOF
