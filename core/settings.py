@@ -108,6 +108,7 @@ import dj_database_url
 # Whitenoise for static files
 MIDDLEWARE.insert(1, 'whitenoise.middleware.WhiteNoiseMiddleware')
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+WHITENOISE_MANIFEST_STRICT = False
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 # Production settings
