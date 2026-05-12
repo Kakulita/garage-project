@@ -9,6 +9,7 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
+    'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -128,3 +129,24 @@ CLOUDINARY_STORAGE = {
 }
 
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+
+JAZZMIN_SETTINGS = {
+    "site_title": "Virtual Garage Admin",
+    "site_header": "Virtual Garage",
+    "site_brand": "🏎️ Virtual Garage",
+    "welcome_sign": "Welcome to the Virtual Garage Admin",
+    "search_model": ["auth.User", "garage.Car"],
+    "show_ui_builder": False,
+}
+
+JAZZMIN_UI_TWEAKS = {
+    "navbar": "navbar-dark",
+    "theme": "lumen",
+    "sidebar": "sidebar-dark-primary",
+    "sidebar_nav_child_indent": False,
+    "sidebar_nav_compact_style": False,
+    "sidebar_nav_legacy_style": False,
+    "sidebar_nav_flat_style": False,
+    "theme_color": "default",
+    "accent": "accent-primary",
+}
