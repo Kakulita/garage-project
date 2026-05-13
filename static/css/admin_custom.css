@@ -1,9 +1,116 @@
-/* Fix for Jazzmin layout when sidebar is hidden */
-.content-wrapper, .main-header, .main-footer {
+/* ===================================================
+   Virtual Garage Admin – Custom Styles
+   =================================================== */
+
+/* ---------- Layout: sidebar hidden ---------- */
+.content-wrapper,
+.main-header,
+.main-footer {
     margin-left: 0 !important;
 }
 
 .main-sidebar {
     display: none !important;
     width: 0 !important;
+}
+
+/* ---------- Navbar height & background ---------- */
+.main-header.navbar {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    min-height: 60px;
+    background: #1a1a2e !important;
+    border-bottom: 2px solid #e74c3c;
+}
+
+/* ---------- Brand: two-line logo ---------- */
+.vg-brand {
+    display: flex !important;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none !important;
+    padding: 8px 16px 8px 0;
+}
+
+.vg-brand__logo {
+    font-size: 1.6rem;
+    line-height: 1;
+}
+
+.vg-brand__text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.1;
+}
+
+.vg-brand__title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #ffffff;
+    letter-spacing: 0.02em;
+}
+
+.vg-brand__sub {
+    font-size: 0.65rem;
+    font-weight: 500;
+    color: #e74c3c;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+/* ---------- User area: photo + name ---------- */
+.vg-user {
+    padding: 0 12px;
+}
+
+.vg-user__avatar {
+    border: 2px solid #e74c3c;
+    box-shadow: 0 0 0 2px rgba(231, 76, 60, 0.25);
+    transition: box-shadow 0.2s;
+}
+
+.vg-user__avatar:hover {
+    box-shadow: 0 0 0 4px rgba(231, 76, 60, 0.4);
+}
+
+.vg-user__name {
+    color: #f0f0f0;
+    font-weight: 600;
+    font-size: 0.875rem;
+}
+
+/* ---------- Top-menu nav links ---------- */
+.main-header .navbar-nav .nav-link {
+    color: rgba(255, 255, 255, 0.75) !important;
+    font-size: 0.875rem;
+    font-weight: 500;
+    padding: 0 14px !important;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    transition: color 0.15s, background 0.15s;
+}
+
+.main-header .navbar-nav .nav-link:hover,
+.main-header .navbar-nav .nav-link.active {
+    color: #ffffff !important;
+    background: rgba(231, 76, 60, 0.15);
+}
+
+/* ---------- Breadcrumbs – hide completely ---------- */
+.breadcrumb-wrapper,
+.content-header .breadcrumb,
+ol.breadcrumb {
+    display: none !important;
+}
+
+/* Also shrink the content-header if it only has the title */
+.content-header {
+    padding-bottom: 8px !important;
+}
+
+/* ---------- Content title cleanup ---------- */
+.content-header h1 {
+    font-size: 1.4rem;
+    font-weight: 700;
 }
