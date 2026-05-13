@@ -114,3 +114,15 @@ ol.breadcrumb {
     font-size: 1.4rem;
     font-weight: 700;
 }
+
+/* ---------- Action bar: hide dropdown + GO + counter ---------- */
+.changelist-form-container .actions,
+.action-counter,
+.actions.sticky {
+    display: none !important;
+}
+
+/* ---------- List filter sidebar: hide ---------- */
+#changelist-filter {
+    display: none !important;
+}

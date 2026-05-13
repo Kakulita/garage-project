@@ -14,10 +14,8 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // ── Sağ üst: kullanıcı avatarı + kullanıcı adı ──
-    // Jazzmin'de sağ köşedeki kullanıcı dropdown'ı bul
     var userDropdowns = document.querySelectorAll('.navbar-nav .nav-item.dropdown .nav-link');
     userDropdowns.forEach(function (link) {
-        // Top-nav menu linklerini atla, sadece kullanıcı dropdown'ını hedefle
         if (link.closest('.top-nav')) return;
         var username = link.textContent.trim();
         if (!username || link.querySelector('img')) return;
@@ -31,4 +29,47 @@ document.addEventListener('DOMContentLoaded', function () {
             '<span style="font-weight:600;">' + username + '</span>';
     });
 
+    // ── Delete Selected butonu — Add butonunun yanına ekle ──
+    var addBtn = document.querySelector('.btn.btn-success, a[href*="add/"].btn');
+    if (addBtn) {
+        var deleteBtn = document.createElement('button');
+        deleteBtn.type = 'button';
+        deleteBtn.className = 'btn btn-danger ml-2';
+        deleteBtn.innerHTML = '<i class="fas fa-trash mr-1"></i> Delete Selected';
+        deleteBtn.style.marginLeft = '8px';
+        deleteBtn.addEventListener('click', function () {
+            // Seçili checkbox'ları bul
+            var checked = document.querySelectorAll('input.action-select:checked');
+            if (checked.length === 0) {
+                alert('Lütfen silmek istediğiniz öğeleri seçin.');
+                return;
+            }
+            if (!confirm(checked.length + ' öğe silinecek. Emin misiniz?')) return;
+
+            // Jazzmin action form'unu kullan
+            var actionSelect = document.querySelector('select[name="action"]');
+            if (actionSelect) {
+                // delete action'ı seç
+                for (var i = 0; i < actionSelect.options.length; i++) {
+                    if (actionSelect.options[i].value.indexOf('delete') !== -1) {
+                        actionSelect.value = actionSelect.options[i].value;
+                        break;
+                    }
+                }
+                // formu submit et
+                var form = actionSelect.closest('form');
+                if (form) form.submit();
+            }
+        });
+        addBtn.parentNode.insertBefore(deleteBtn, addBtn.nextSibling);
+    }
+
+    // ── Action bar'ı gizle (dropdown + GO + "0 of X selected") ──
+    var actionBar = document.querySelector('.changelist-form-container .actions, .action-counter');
+    if (actionBar) {
+        var actionsRow = actionBar.closest('.row') || actionBar.closest('.actions');
+        if (actionsRow) actionsRow.style.display = 'none';
+    }
+
 });
+
