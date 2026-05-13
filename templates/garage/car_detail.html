@@ -1,4 +1,3 @@
-cat > templates/garage/car_detail.html << 'EOF'
 {% extends 'base.html' %}
 
 {% block title %}{{ car }}{% endblock %}
@@ -22,8 +21,9 @@ cat > templates/garage/car_detail.html << 'EOF'
       <div class="bg-secondary text-white text-center py-5 rounded">No Image</div>
     {% endif %}
   </div>
-  <div class="col-md-8">
-    <table class="table">
+  <div class="col-md-8 mt-3 mt-md-0">
+    <div class="table-responsive">
+      <table class="table table-bordered">
       <tr><th>Brand</th><td>{{ car.brand }}</td></tr>
       <tr><th>Model</th><td>{{ car.model }}</td></tr>
       <tr><th>Year</th><td>{{ car.year }}</td></tr>
@@ -32,7 +32,8 @@ cat > templates/garage/car_detail.html << 'EOF'
       <tr><th>Tags</th><td>{% for tag in car.tags.all %}
         <span class="badge bg-secondary">{{ tag }}</span>
       {% endfor %}</td></tr>
-    </table>
+      </table>
+    </div>
   </div>
 </div>
 
@@ -42,24 +43,25 @@ cat > templates/garage/car_detail.html << 'EOF'
 </div>
 
 {% if lap_times %}
-<table class="table table-striped">
-  <thead>
-    <tr><th>Track</th><th>Time</th><th>Date</th><th>Notes</th><th></th></tr>
-  </thead>
-  <tbody>
-    {% for lap in lap_times %}
-    <tr>
-      <td>{{ lap.track.name }}</td>
-      <td>{{ lap.minutes }}:{{ lap.seconds|stringformat:"02d" }}.{{ lap.milliseconds|stringformat:"03d" }}</td>
-      <td>{{ lap.date }}</td>
-      <td>{{ lap.notes }}</td>
-      <td><a href="{% url 'lap_delete' lap.pk %}" class="btn btn-danger btn-sm">Delete</a></td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
+<div class="table-responsive">
+  <table class="table table-striped align-middle">
+    <thead class="table-dark">
+      <tr><th>Track</th><th>Time</th><th>Date</th><th>Notes</th><th class="text-end">Actions</th></tr>
+    </thead>
+    <tbody>
+      {% for lap in lap_times %}
+      <tr>
+        <td>{{ lap.track.name }}</td>
+        <td class="text-nowrap fw-semibold">{{ lap.minutes }}:{{ lap.seconds|stringformat:"02d" }}.{{ lap.milliseconds|stringformat:"03d" }}</td>
+        <td class="text-nowrap">{{ lap.date }}</td>
+        <td>{{ lap.notes }}</td>
+        <td class="text-end"><a href="{% url 'lap_delete' lap.pk %}" class="btn btn-outline-danger btn-sm"><i class="bi bi-trash"></i> Delete</a></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
 {% else %}
 <p class="text-muted">No lap times yet.</p>
 {% endif %}
 {% endblock %}
-EOF

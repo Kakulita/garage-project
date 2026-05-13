@@ -9,17 +9,23 @@
 </head>
 <body class="bg-light">
 
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
     <div class="container">
       <a class="navbar-brand fw-bold" href="/">🏎️ Virtual Garage</a>
-      <div class="ms-auto">
-        {% if user.is_authenticated %}
-          <span class="text-light me-3">👤 {{ user.username }}</span>
-          <a href="{% url 'logout' %}" class="btn btn-outline-light btn-sm">Logout</a>
-        {% else %}
-          <a href="{% url 'login' %}" class="btn btn-outline-light btn-sm me-2">Login</a>
-          <a href="{% url 'signup' %}" class="btn btn-primary btn-sm">Sign Up</a>
-        {% endif %}
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto align-items-center">
+          {% if user.is_authenticated %}
+            <li class="nav-item me-lg-3 mb-2 mb-lg-0 text-light d-none d-lg-block">👤 {{ user.username }}</li>
+            <li class="nav-item mb-2 mb-lg-0 w-100 d-lg-none text-light text-center">👤 {{ user.username }}</li>
+            <li class="nav-item w-100"><a href="{% url 'logout' %}" class="btn btn-outline-light btn-sm w-100">Logout</a></li>
+          {% else %}
+            <li class="nav-item mb-2 mb-lg-0 me-lg-2 w-100"><a href="{% url 'login' %}" class="btn btn-outline-light btn-sm w-100">Login</a></li>
+            <li class="nav-item w-100"><a href="{% url 'signup' %}" class="btn btn-primary btn-sm w-100">Sign Up</a></li>
+          {% endif %}
+        </ul>
       </div>
     </div>
   </nav>
