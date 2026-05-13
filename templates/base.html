@@ -19,6 +19,21 @@
     .nav-scrollable::-webkit-scrollbar {
       display: none;
     }
+    
+    /* Shrink tables on mobile to prevent horizontal scrolling */
+    @media (max-width: 768px) {
+      .table-responsive .table {
+        font-size: 0.75rem;
+      }
+      .table-responsive .table td, 
+      .table-responsive .table th {
+        padding: 0.3rem 0.2rem;
+      }
+      .table-responsive .btn-sm {
+        padding: 0.1rem 0.3rem;
+        font-size: 0.7rem;
+      }
+    }
   </style>
 </head>
 <body class="bg-light">
