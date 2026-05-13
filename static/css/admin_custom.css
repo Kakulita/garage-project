@@ -1,0 +1,9 @@
+/* Fix for Jazzmin layout when sidebar is hidden */
+.content-wrapper, .main-header, .main-footer {
+    margin-left: 0 !important;
+}
+
+.main-sidebar {
+    display: none !important;
+    width: 0 !important;
+}

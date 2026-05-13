@@ -139,6 +139,7 @@ JAZZMIN_SETTINGS = {
     "search_model": [],
     "show_ui_builder": False,
     "show_sidebar": False,
+    "custom_css": "css/admin_custom.css",
     "topmenu_links": [
         {"name": "Dashboard", "url": "admin:index"},
         {"model": "auth.User", "name": "Users"},
