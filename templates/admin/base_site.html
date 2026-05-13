@@ -1,29 +1,42 @@
 {% extends "jazzmin/base_site.html" %}
 {% load i18n static %}
 
-{# ── Sol üst: Virtual Garage + Admin Panel ── #}
-{% block navbar_brand %}
-<a href="{% url 'admin:index' %}" class="navbar-brand vg-brand">
-    <span class="vg-brand__logo">🏎️</span>
-    <span class="vg-brand__text">
-        <span class="vg-brand__title">Virtual Garage</span>
-        <span class="vg-brand__sub">Admin Panel</span>
-    </span>
-</a>
-{% endblock %}
-
-{# ── Sağ üst: kullanıcı fotoğrafı + kullanıcı adı ── #}
-{% block user_avatar %}
-<div class="vg-user d-flex align-items-center">
-    <img
-        src="https://ui-avatars.com/api/?name={{ user.get_full_name|default:user.username }}&background=e74c3c&color=fff&size=36&bold=true"
-        class="vg-user__avatar rounded-circle"
-        width="36" height="36"
-        alt="{{ user.username }}"
-    >
-    <span class="vg-user__name ms-2">{{ user.username }}</span>
-</div>
-{% endblock %}
-
 {# ── Breadcrumb'ları tamamen gizle ── #}
 {% block breadcrumbs %}{% endblock %}
+
+{# ── Navbar brand + user avatar via JS injection ── #}
+{% block extrajs %}
+{{ block.super }}
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    // --- İki satırlı brand ---
+    var brand = document.querySelector('.navbar-brand');
+    if (brand) {
+        brand.innerHTML = '<span style="font-size:1.5rem;line-height:1;margin-right:8px;">🏎️</span>' +
+            '<span style="display:flex;flex-direction:column;line-height:1.15;">' +
+            '<span style="font-size:1rem;font-weight:700;color:#fff;letter-spacing:.02em;">Virtual Garage</span>' +
+            '<span style="font-size:.62rem;font-weight:600;color:#e74c3c;letter-spacing:.1em;text-transform:uppercase;">Admin Panel</span>' +
+            '</span>';
+        brand.style.display = 'flex';
+        brand.style.alignItems = 'center';
+    }
+
+    // --- Sağ üst: kullanıcı fotoğrafı + kullanıcı adı ---
+    var userMenu = document.querySelector('.navbar-nav.ml-auto li.nav-item.dropdown > a.nav-link, #user-tools, .navbar-nav .dropdown-toggle');
+    // Jazzmin'de kullanıcı linki genellikle sağ taraftaki dropdown
+    var dropdowns = document.querySelectorAll('.navbar-nav .nav-link');
+    dropdowns.forEach(function(link) {
+        var txt = link.textContent.trim();
+        // username içeren dropdown link'i bul
+        if (link.closest('.dropdown') && !link.closest('.top-nav')) {
+            var username = txt;
+            var avatarUrl = 'https://ui-avatars.com/api/?name=' + encodeURIComponent(username) + '&background=e74c3c&color=fff&size=32&bold=true';
+            var existing = link.querySelector('img');
+            if (!existing && username.length > 0) {
+                link.innerHTML = '<img src="' + avatarUrl + '" width="30" height="30" style="border-radius:50%;border:2px solid #e74c3c;margin-right:8px;vertical-align:middle;" alt=""> ' + '<span style="font-weight:600;">' + username + '</span>';
+            }
+        }
+    });
+});
+</script>
+{% endblock %}
