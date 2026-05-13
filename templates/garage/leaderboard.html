@@ -21,11 +21,12 @@
   </div>
 </form>
 
-<table class="table table-striped">
-  <thead>
-    <tr><th>#</th><th>Car</th><th>Driver</th><th>Track</th><th>Time</th><th>Date</th></tr>
-  </thead>
-  <tbody>
+<div class="table-responsive">
+  <table class="table table-striped align-middle">
+    <thead class="table-dark">
+      <tr><th>#</th><th>Car</th><th>Driver</th><th>Track</th><th>Time</th><th>Date</th><th>Notes</th></tr>
+    </thead>
+    <tbody>
     {% for lap in laps %}
     <tr>
       <td>{{ forloop.counter }}</td>
@@ -34,11 +35,12 @@
       <td>{{ lap.track.name }}</td>
       <td>{{ lap.minutes }}:{{ lap.seconds|stringformat:"02d" }}.{{ lap.milliseconds|stringformat:"03d" }}</td>
       <td>{{ lap.date }}</td>
+      <td>{{ lap.notes|default:"-" }}</td>
     </tr>
     {% empty %}
-    <tr><td colspan="6" class="text-muted">No lap times yet.</td></tr>
+    <tr><td colspan="7" class="text-muted text-center py-4">No lap times yet.</td></tr>
     {% endfor %}
-  </tbody>
-</table>
+    </tbody>
+  </table>
+</div>
 {% endblock %}
-EOF
