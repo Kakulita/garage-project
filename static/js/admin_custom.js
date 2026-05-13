@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', function () {
         var deleteBtn = document.createElement('button');
         deleteBtn.type = 'button';
         deleteBtn.className = 'btn btn-danger ml-2';
-        deleteBtn.innerHTML = '<i class="fas fa-trash mr-1"></i> Delete Selected';
+        deleteBtn.innerHTML = '<i class="fas fa-trash mr-1"></i> Delete';
         deleteBtn.style.marginLeft = '8px';
         deleteBtn.addEventListener('click', function () {
             // Seçili checkbox'ları bul

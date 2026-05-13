@@ -6,7 +6,14 @@ from .models import Car, Track, LapTime, Tag
 class CarAdmin(admin.ModelAdmin):
     list_display = ['brand', 'model', 'year', 'owner', 'fuel_type']
     search_fields = ['brand', 'model', 'owner__username']
-    list_filter = ['fuel_type', 'year']
+    list_filter = []
+    actions = ['delete_selected_cars']
+
+    def delete_selected_cars(self, request, queryset):
+        count = queryset.count()
+        queryset.delete()
+        self.message_user(request, f"{count} araç başarıyla silindi.")
+    delete_selected_cars.short_description = "Seçili araçları sil"
 
 
 @admin.register(Track)
@@ -16,7 +23,7 @@ class TrackAdmin(admin.ModelAdmin):
 
 @admin.register(LapTime)
 class LapTimeAdmin(admin.ModelAdmin):
-    list_display = ['car', 'track', 'minutes', 'seconds', 'milliseconds', 'date']
+    list_display = ['car', 'track', 'minutes', 'seconds', 'milliseconds', 'date', 'notes']
 
 
 @admin.register(Tag)
