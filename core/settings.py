@@ -134,14 +134,23 @@ DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 JAZZMIN_SETTINGS = {
     "site_title": "Virtual Garage Admin",
     "site_header": "Virtual Garage",
-    "site_brand": "🏎️ Virtual Garage",
+    "site_brand": "🏎️ Virtual Garage Admin",
     "welcome_sign": "Welcome to the Virtual Garage Admin",
-    "search_model": ["auth.User", "garage.Car"],
+    "search_model": [],
     "show_ui_builder": False,
+    "show_sidebar": False,
+    "topmenu_links": [
+        {"name": "Dashboard", "url": "admin:index"},
+        {"model": "auth.User", "name": "Users"},
+        {"model": "garage.Car", "name": "Cars"},
+        {"model": "garage.LapTime", "name": "Lap Times"},
+        {"model": "garage.Tag", "name": "Tags"},
+        {"model": "garage.Track", "name": "Tracks"},
+    ],
 }
 
 JAZZMIN_UI_TWEAKS = {
-    "navbar": "navbar-dark",
+    "navbar": "navbar-dark bg-dark",
     "theme": "lumen",
     "sidebar": "sidebar-dark-primary",
     "sidebar_nav_child_indent": False,
