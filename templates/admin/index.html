@@ -1,173 +1,307 @@
-{% extends "jazzmin/index.html" %}
-{% load garage_admin_tags %}
+{% extends "admin/base_site.html" %}
+{% load i18n static jazzmin garage_admin_tags %}
+{% get_jazzmin_ui_tweaks as jazzmin_ui %}
+
+{% block bodyclass %}{{ block.super }} dashboard{% endblock %}
+
+{% block content_title %} {% trans 'Dashboard' %} {% endblock %}
+
+{% block breadcrumbs %}
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'admin:index' %}">{% trans 'Home' %}</a></li>
+        <li class="breadcrumb-item">{% trans 'Dashboard' %}</li>
+    </ol>
+{% endblock %}
+
 
 {% block content %}
-{% get_dashboard_stats as stats %}
+    {% get_dashboard_stats as stats %}
 
-<!-- Include Chart.js -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Include Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-<div class="container-fluid mb-4">
-    <div class="row">
-        <!-- Users Card -->
-        <div class="col-lg-3 col-6">
-            <div class="small-box bg-info rounded shadow-sm">
-                <div class="inner p-3">
-                    <h3>{{ stats.user_count }}</h3>
-                    <p>Total Users</p>
+    <div class="container-fluid mb-4 px-0">
+        <div class="row">
+            <!-- Users Card -->
+            <div class="col-lg-3 col-6">
+                <div class="small-box bg-info rounded shadow-sm">
+                    <div class="inner p-3">
+                        <h3>{{ stats.user_count }}</h3>
+                        <p>Total Users</p>
+                    </div>
+                    <div class="icon" style="position: absolute; right: 15px; top: 15px; font-size: 60px; color: rgba(255,255,255,0.3);">
+                        <i class="fas fa-users"></i>
+                    </div>
                 </div>
-                <div class="icon" style="position: absolute; right: 15px; top: 15px; font-size: 60px; color: rgba(255,255,255,0.3);">
-                    <i class="fas fa-users"></i>
+            </div>
+            <!-- Cars Card -->
+            <div class="col-lg-3 col-6">
+                <div class="small-box bg-success rounded shadow-sm">
+                    <div class="inner p-3 text-white">
+                        <h3>{{ stats.car_count }}</h3>
+                        <p>Registered Cars</p>
+                    </div>
+                    <div class="icon" style="position: absolute; right: 15px; top: 15px; font-size: 60px; color: rgba(255,255,255,0.3);">
+                        <i class="fas fa-car"></i>
+                    </div>
+                </div>
+            </div>
+            <!-- Lap Times Card -->
+            <div class="col-lg-3 col-6">
+                <div class="small-box bg-warning rounded shadow-sm">
+                    <div class="inner p-3 text-white">
+                        <h3>{{ stats.lap_count }}</h3>
+                        <p>Lap Times Recorded</p>
+                    </div>
+                    <div class="icon" style="position: absolute; right: 15px; top: 15px; font-size: 60px; color: rgba(255,255,255,0.3);">
+                        <i class="fas fa-stopwatch"></i>
+                    </div>
+                </div>
+            </div>
+            <!-- Tracks Card -->
+            <div class="col-lg-3 col-6">
+                <div class="small-box bg-danger rounded shadow-sm">
+                    <div class="inner p-3 text-white">
+                        <h3>{{ stats.track_count }}</h3>
+                        <p>Available Tracks</p>
+                    </div>
+                    <div class="icon" style="position: absolute; right: 15px; top: 15px; font-size: 60px; color: rgba(255,255,255,0.3);">
+                        <i class="fas fa-flag-checkered"></i>
+                    </div>
                 </div>
             </div>
         </div>
-        <!-- Cars Card -->
-        <div class="col-lg-3 col-6">
-            <div class="small-box bg-success rounded shadow-sm">
-                <div class="inner p-3 text-white">
-                    <h3>{{ stats.car_count }}</h3>
-                    <p>Registered Cars</p>
-                </div>
-                <div class="icon" style="position: absolute; right: 15px; top: 15px; font-size: 60px; color: rgba(255,255,255,0.3);">
-                    <i class="fas fa-car"></i>
-                </div>
-            </div>
-        </div>
-        <!-- Lap Times Card -->
-        <div class="col-lg-3 col-6">
-            <div class="small-box bg-warning rounded shadow-sm">
-                <div class="inner p-3 text-white">
-                    <h3>{{ stats.lap_count }}</h3>
-                    <p>Lap Times Recorded</p>
-                </div>
-                <div class="icon" style="position: absolute; right: 15px; top: 15px; font-size: 60px; color: rgba(255,255,255,0.3);">
-                    <i class="fas fa-stopwatch"></i>
+
+        <!-- Charts Row -->
+        <div class="row mt-4">
+            <!-- Brand Pie Chart -->
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card shadow-sm h-100">
+                    <div class="card-header bg-dark text-white">
+                        <h5 class="card-title mb-0"><i class="fas fa-chart-pie mr-2"></i> Cars by Brand</h5>
+                    </div>
+                    <div class="card-body">
+                        <div style="height: 250px;">
+                            <canvas id="brandChart"></canvas>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-        <!-- Tracks Card -->
-        <div class="col-lg-3 col-6">
-            <div class="small-box bg-danger rounded shadow-sm">
-                <div class="inner p-3 text-white">
-                    <h3>{{ stats.track_count }}</h3>
-                    <p>Available Tracks</p>
+            
+            <!-- Fuel Type Doughnut Chart -->
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card shadow-sm h-100">
+                    <div class="card-header bg-dark text-white">
+                        <h5 class="card-title mb-0"><i class="fas fa-gas-pump mr-2"></i> Fuel Types</h5>
+                    </div>
+                    <div class="card-body">
+                        <div style="height: 250px;">
+                            <canvas id="fuelChart"></canvas>
+                        </div>
+                    </div>
                 </div>
-                <div class="icon" style="position: absolute; right: 15px; top: 15px; font-size: 60px; color: rgba(255,255,255,0.3);">
-                    <i class="fas fa-flag-checkered"></i>
+            </div>
+
+            <!-- Lap Times Bar Chart -->
+            <div class="col-lg-4 col-md-12 mb-4">
+                <div class="card shadow-sm h-100">
+                    <div class="card-header bg-dark text-white">
+                        <h5 class="card-title mb-0"><i class="fas fa-chart-bar mr-2"></i> Top Tracks Activity</h5>
+                    </div>
+                    <div class="card-body">
+                        <div style="height: 250px;">
+                            <canvas id="trackChart"></canvas>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Charts Row -->
-    <div class="row mt-4">
-        <!-- Brand Pie Chart -->
-        <div class="col-lg-4 col-md-6 mb-4">
-            <div class="card shadow-sm h-100">
-                <div class="card-header bg-dark text-white">
-                    <h5 class="card-title mb-0"><i class="fas fa-chart-pie mr-2"></i> Cars by Brand</h5>
-                </div>
-                <div class="card-body">
-                    <canvas id="brandChart"></canvas>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Fuel Type Doughnut Chart -->
-        <div class="col-lg-4 col-md-6 mb-4">
-            <div class="card shadow-sm h-100">
-                <div class="card-header bg-dark text-white">
-                    <h5 class="card-title mb-0"><i class="fas fa-gas-pump mr-2"></i> Fuel Types</h5>
-                </div>
-                <div class="card-body">
-                    <canvas id="fuelChart"></canvas>
-                </div>
-            </div>
-        </div>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Shared Colors
+        const colors = [
+            'rgba(54, 162, 235, 0.8)',
+            'rgba(255, 99, 132, 0.8)',
+            'rgba(255, 206, 86, 0.8)',
+            'rgba(75, 192, 192, 0.8)',
+            'rgba(153, 102, 255, 0.8)',
+            'rgba(255, 159, 64, 0.8)'
+        ];
 
-        <!-- Lap Times Bar Chart -->
-        <div class="col-lg-4 col-md-12 mb-4">
-            <div class="card shadow-sm h-100">
-                <div class="card-header bg-dark text-white">
-                    <h5 class="card-title mb-0"><i class="fas fa-chart-bar mr-2"></i> Top Tracks Activity</h5>
-                </div>
-                <div class="card-body">
-                    <canvas id="trackChart"></canvas>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+        // Brand Pie Chart
+        const ctxBrand = document.getElementById('brandChart').getContext('2d');
+        new Chart(ctxBrand, {
+            type: 'pie',
+            data: {
+                labels: {{ stats.brand_labels_json|safe }},
+                datasets: [{
+                    data: {{ stats.brand_values_json|safe }},
+                    backgroundColor: colors,
+                    borderWidth: 1
+                }]
+            },
+            options: { responsive: true, maintainAspectRatio: false }
+        });
 
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Shared Colors
-    const colors = [
-        'rgba(54, 162, 235, 0.8)',
-        'rgba(255, 99, 132, 0.8)',
-        'rgba(255, 206, 86, 0.8)',
-        'rgba(75, 192, 192, 0.8)',
-        'rgba(153, 102, 255, 0.8)',
-        'rgba(255, 159, 64, 0.8)'
-    ];
+        // Fuel Type Doughnut Chart
+        const ctxFuel = document.getElementById('fuelChart').getContext('2d');
+        new Chart(ctxFuel, {
+            type: 'doughnut',
+            data: {
+                labels: {{ stats.fuel_labels_json|safe }},
+                datasets: [{
+                    data: {{ stats.fuel_values_json|safe }},
+                    backgroundColor: colors,
+                    borderWidth: 1
+                }]
+            },
+            options: { responsive: true, maintainAspectRatio: false }
+        });
 
-    // Brand Pie Chart
-    const ctxBrand = document.getElementById('brandChart').getContext('2d');
-    new Chart(ctxBrand, {
-        type: 'pie',
-        data: {
-            labels: {{ stats.brand_labels_json|safe }},
-            datasets: [{
-                data: {{ stats.brand_values_json|safe }},
-                backgroundColor: colors,
-                borderWidth: 1
-            }]
-        },
-        options: { responsive: true, maintainAspectRatio: false }
-    });
-
-    // Fuel Type Doughnut Chart
-    const ctxFuel = document.getElementById('fuelChart').getContext('2d');
-    new Chart(ctxFuel, {
-        type: 'doughnut',
-        data: {
-            labels: {{ stats.fuel_labels_json|safe }},
-            datasets: [{
-                data: {{ stats.fuel_values_json|safe }},
-                backgroundColor: colors,
-                borderWidth: 1
-            }]
-        },
-        options: { responsive: true, maintainAspectRatio: false }
-    });
-
-    // Top Tracks Bar Chart
-    const ctxTrack = document.getElementById('trackChart').getContext('2d');
-    new Chart(ctxTrack, {
-        type: 'bar',
-        data: {
-            labels: {{ stats.track_labels_json|safe }},
-            datasets: [{
-                label: 'Lap Times Recorded',
-                data: {{ stats.track_values_json|safe }},
-                backgroundColor: 'rgba(54, 162, 235, 0.8)',
-                borderColor: 'rgba(54, 162, 235, 1)',
-                borderWidth: 1
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            scales: {
-                y: { beginAtZero: true, ticks: { stepSize: 1 } }
+        // Top Tracks Bar Chart
+        const ctxTrack = document.getElementById('trackChart').getContext('2d');
+        new Chart(ctxTrack, {
+            type: 'bar',
+            data: {
+                labels: {{ stats.track_labels_json|safe }},
+                datasets: [{
+                    label: 'Lap Times Recorded',
+                    data: {{ stats.track_values_json|safe }},
+                    backgroundColor: 'rgba(54, 162, 235, 0.8)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: { beginAtZero: true, ticks: { stepSize: 1 } }
+                }
             }
-        }
+        });
     });
-});
-</script>
+    </script>
 
-<hr class="mt-4 mb-4">
-<h3 class="mb-3">Quick Actions & Applications</h3>
-<!-- Original Jazzmin Content -->
-{{ block.super }}
+    <hr class="mt-2 mb-4">
+    <h3 class="mb-3">Quick Actions & Applications</h3>
+
+    {% get_side_menu using="app_list" as dashboard_list %}
+    {% if dashboard_list %}
+        {% widthratio dashboard_list|length 2 1 as middle %}
+    {% endif %}
+
+    <div class="row">
+        <div class="col-lg-9 col-12">
+            <div class="row">
+                <div class="col-md-6 col-sm-12">
+                    {% for app in dashboard_list %}
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="m-0">{{ app.name }}</h5>
+                            </div>
+                            <div class="card-body">
+                                <table class="table table-sm">
+                                    <tbody>
+                                    {% for model in app.models %}
+                                        <tr>
+                                            <td>
+                                                {% if model.url %}<a href="{{ model.url }}">{{ model.name }}</a>{% else %}{{ model.name }}{% endif %}
+                                            </td>
+                                            <td>
+                                                <div class="btn-group float-right">
+                                                    {% if model.add_url %}
+                                                        <a href="{{ model.add_url }}" class="btn btn-xs {{ jazzmin_ui.button_classes.success }} addlink">{% trans 'Add' %}</a>
+                                                    {% endif %}
+                                                    {% if model.url %}
+                                                        {% if model.view_only %}
+                                                            <a href="{{ model.url }}" class="btn btn-xs {{ jazzmin_ui.button_classes.info }} viewlink">{% trans 'View' %}</a>
+                                                        {% else %}
+                                                            <a href="{{ model.url }}" class="btn btn-xs {{ jazzmin_ui.button_classes.info }} changelink">{% if model.custom %}{% trans 'Go' %}{% else %}{% trans 'Change' %}{% endif %}</a>
+                                                        {% endif %}
+                                                    {% endif %}
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        {% if forloop.counter == middle|add:"0" %}
+                        </div>
+                        <div class="col-md-6 col-sm-12">
+                        {% endif %}
+
+                    {% endfor %}
+                    </div>
+            </div>
+
+        </div>
+        <div class="col-lg-3 col-12">
+            <div id="content-related">
+                <div class="module" id="recent-actions-module">
+                    <h4 class="mb-3">{% trans 'Recent actions' %}</h4>
+                    {% load log %}
+                    {% get_admin_log 6 as admin_log for_user user %}
+                    {% if not admin_log %}
+                        <p>{% trans 'None available' %}</p>
+                    {% else %}
+                        <div class="timeline">
+                            {% for entry in admin_log %}
+                                <div>
+                                    {% if entry.is_change %}
+                                        <i class="fas fa-edit bg-gray text-xs"></i>
+                                    {% elif entry.is_deletion %}
+                                        <i class="fas fa-trash bg-danger text-xs"></i>
+                                    {% elif entry.is_addition %}
+                                        <i class="fas fa-plus-circle bg-success text-xs"></i>
+                                    {% endif %}
+
+                                    <div class="timeline-item">
+                                        <span class="time"><i class="fas fa-clock"></i> {% blocktrans with timesince=entry.action_time|timesince %}{{ timesince }} ago{% endblocktrans %}</span>
+                                        <h3 class="timeline-header no-border">
+                                            {% if entry.is_deletion or not entry.get_admin_url %}
+                                                {{ entry.object_repr }}
+                                            {% else %}
+                                                <a href="{{ entry.get_admin_url }}">{{ entry.object_repr }}</a>
+                                            {% endif %}
+
+                                            {% if entry.model %}
+                                                <span class="mini quiet">
+                                                    {% filter capfirst %}
+                                                        {{ entry.model }}
+                                                    {% endfilter %}
+                                                </span>
+                                            {% endif %}
+                                        </h3>
+                                        {% if not entry.is_deletion %}
+                                            <div class="timeline-body">
+                                                {% if entry.is_addition %}
+                                                    {{ entry }}
+                                                {% else %}
+                                                    <ul style="list-style: none; padding: 0;">
+                                                        {% action_message_to_list entry as action_message_list %}
+                                                        {% for action_message in action_message_list %}
+                                                            <li>{{ action_message.msg|style_bold_first_word }}</li>
+                                                        {% endfor %}
+                                                    </ul>
+                                                {% endif %}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            {% endfor %}
+                            <div>
+                                <i class="fa fa-clock bg-gray"></i>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}
