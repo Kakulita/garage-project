@@ -1,0 +1,173 @@
+{% extends "jazzmin/index.html" %}
+{% load garage_admin_tags %}
+
+{% block content %}
+{% get_dashboard_stats as stats %}
+
+<!-- Include Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<div class="container-fluid mb-4">
+    <div class="row">
+        <!-- Users Card -->
+        <div class="col-lg-3 col-6">
+            <div class="small-box bg-info rounded shadow-sm">
+                <div class="inner p-3">
+                    <h3>{{ stats.user_count }}</h3>
+                    <p>Total Users</p>
+                </div>
+                <div class="icon" style="position: absolute; right: 15px; top: 15px; font-size: 60px; color: rgba(255,255,255,0.3);">
+                    <i class="fas fa-users"></i>
+                </div>
+            </div>
+        </div>
+        <!-- Cars Card -->
+        <div class="col-lg-3 col-6">
+            <div class="small-box bg-success rounded shadow-sm">
+                <div class="inner p-3 text-white">
+                    <h3>{{ stats.car_count }}</h3>
+                    <p>Registered Cars</p>
+                </div>
+                <div class="icon" style="position: absolute; right: 15px; top: 15px; font-size: 60px; color: rgba(255,255,255,0.3);">
+                    <i class="fas fa-car"></i>
+                </div>
+            </div>
+        </div>
+        <!-- Lap Times Card -->
+        <div class="col-lg-3 col-6">
+            <div class="small-box bg-warning rounded shadow-sm">
+                <div class="inner p-3 text-white">
+                    <h3>{{ stats.lap_count }}</h3>
+                    <p>Lap Times Recorded</p>
+                </div>
+                <div class="icon" style="position: absolute; right: 15px; top: 15px; font-size: 60px; color: rgba(255,255,255,0.3);">
+                    <i class="fas fa-stopwatch"></i>
+                </div>
+            </div>
+        </div>
+        <!-- Tracks Card -->
+        <div class="col-lg-3 col-6">
+            <div class="small-box bg-danger rounded shadow-sm">
+                <div class="inner p-3 text-white">
+                    <h3>{{ stats.track_count }}</h3>
+                    <p>Available Tracks</p>
+                </div>
+                <div class="icon" style="position: absolute; right: 15px; top: 15px; font-size: 60px; color: rgba(255,255,255,0.3);">
+                    <i class="fas fa-flag-checkered"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts Row -->
+    <div class="row mt-4">
+        <!-- Brand Pie Chart -->
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-header bg-dark text-white">
+                    <h5 class="card-title mb-0"><i class="fas fa-chart-pie mr-2"></i> Cars by Brand</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="brandChart"></canvas>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Fuel Type Doughnut Chart -->
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-header bg-dark text-white">
+                    <h5 class="card-title mb-0"><i class="fas fa-gas-pump mr-2"></i> Fuel Types</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="fuelChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Lap Times Bar Chart -->
+        <div class="col-lg-4 col-md-12 mb-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-header bg-dark text-white">
+                    <h5 class="card-title mb-0"><i class="fas fa-chart-bar mr-2"></i> Top Tracks Activity</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="trackChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Shared Colors
+    const colors = [
+        'rgba(54, 162, 235, 0.8)',
+        'rgba(255, 99, 132, 0.8)',
+        'rgba(255, 206, 86, 0.8)',
+        'rgba(75, 192, 192, 0.8)',
+        'rgba(153, 102, 255, 0.8)',
+        'rgba(255, 159, 64, 0.8)'
+    ];
+
+    // Brand Pie Chart
+    const ctxBrand = document.getElementById('brandChart').getContext('2d');
+    new Chart(ctxBrand, {
+        type: 'pie',
+        data: {
+            labels: {{ stats.brand_labels_json|safe }},
+            datasets: [{
+                data: {{ stats.brand_values_json|safe }},
+                backgroundColor: colors,
+                borderWidth: 1
+            }]
+        },
+        options: { responsive: true, maintainAspectRatio: false }
+    });
+
+    // Fuel Type Doughnut Chart
+    const ctxFuel = document.getElementById('fuelChart').getContext('2d');
+    new Chart(ctxFuel, {
+        type: 'doughnut',
+        data: {
+            labels: {{ stats.fuel_labels_json|safe }},
+            datasets: [{
+                data: {{ stats.fuel_values_json|safe }},
+                backgroundColor: colors,
+                borderWidth: 1
+            }]
+        },
+        options: { responsive: true, maintainAspectRatio: false }
+    });
+
+    // Top Tracks Bar Chart
+    const ctxTrack = document.getElementById('trackChart').getContext('2d');
+    new Chart(ctxTrack, {
+        type: 'bar',
+        data: {
+            labels: {{ stats.track_labels_json|safe }},
+            datasets: [{
+                label: 'Lap Times Recorded',
+                data: {{ stats.track_values_json|safe }},
+                backgroundColor: 'rgba(54, 162, 235, 0.8)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: { beginAtZero: true, ticks: { stepSize: 1 } }
+            }
+        }
+    });
+});
+</script>
+
+<hr class="mt-4 mb-4">
+<h3 class="mb-3">Quick Actions & Applications</h3>
+<!-- Original Jazzmin Content -->
+{{ block.super }}
+{% endblock %}
