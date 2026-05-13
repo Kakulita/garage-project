@@ -29,8 +29,14 @@ document.addEventListener('DOMContentLoaded', function () {
             '<span style="font-weight:600;">' + username + '</span>';
     });
 
-    // ── Delete Selected butonu — Add butonunun yanına ekle ──
-    var addBtn = document.querySelector('.btn.btn-success, a[href*="add/"].btn');
+    // ── Add butonlarının yazısını sadece "Add" yap ──
+    var addBtns = document.querySelectorAll('a[href*="add/"].btn');
+    addBtns.forEach(function (btn) {
+        btn.innerHTML = '<i class="fas fa-plus mr-1"></i> Add';
+    });
+
+    // ── Delete butonu — Add butonunun yanına ekle ──
+    var addBtn = document.querySelector('a[href*="add/"].btn, .btn.btn-success');
     if (addBtn) {
         var deleteBtn = document.createElement('button');
         deleteBtn.type = 'button';
@@ -38,7 +44,6 @@ document.addEventListener('DOMContentLoaded', function () {
         deleteBtn.innerHTML = '<i class="fas fa-trash mr-1"></i> Delete';
         deleteBtn.style.marginLeft = '8px';
         deleteBtn.addEventListener('click', function () {
-            // Seçili checkbox'ları bul
             var checked = document.querySelectorAll('input.action-select:checked');
             if (checked.length === 0) {
                 alert('Lütfen silmek istediğiniz öğeleri seçin.');
@@ -46,17 +51,14 @@ document.addEventListener('DOMContentLoaded', function () {
             }
             if (!confirm(checked.length + ' öğe silinecek. Emin misiniz?')) return;
 
-            // Jazzmin action form'unu kullan
             var actionSelect = document.querySelector('select[name="action"]');
             if (actionSelect) {
-                // delete action'ı seç
                 for (var i = 0; i < actionSelect.options.length; i++) {
                     if (actionSelect.options[i].value.indexOf('delete') !== -1) {
                         actionSelect.value = actionSelect.options[i].value;
                         break;
                     }
                 }
-                // formu submit et
                 var form = actionSelect.closest('form');
                 if (form) form.submit();
             }
@@ -72,4 +74,3 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
 });
-
